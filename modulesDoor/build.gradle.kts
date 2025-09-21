@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
+    id("maven-publish")
 }
 
 android {
@@ -52,4 +53,18 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+}
+
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = "com.com.modeledoor"
+            artifactId = "modeledoor"
+            version = "1.0.0"
+
+            afterEvaluate {
+                from(components["release"])
+            }
+        }
+    }
 }
