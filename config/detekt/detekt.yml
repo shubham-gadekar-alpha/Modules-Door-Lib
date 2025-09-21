@@ -1,0 +1,56 @@
+build:
+  maxIssues: 0
+
+config:
+  validation: true
+
+processors:
+  active: true
+
+console-reports:
+  active: true
+
+comments:
+  UndocumentedPublicClass:
+    active: false
+  UndocumentedPublicFunction:
+    active: false
+
+style:
+  MagicNumber:
+    active: false
+  WildcardImport:
+    active: true
+  MaxLineLength:
+    active: true
+    maxLineLength: 150
+
+complexity:
+  LongMethod:
+    active: true
+    threshold: 150
+  TooManyFunctions:
+    active: false
+  LongParameterList:
+    active: true
+    functionThreshold: 10
+    constructorThreshold: 10
+#  FunctionLength:
+#    active: true
+#    max: 120
+
+performance:
+  SpreadOperator:
+    active: true
+
+formatting:
+  ImportOrdering:
+    active: false
+  PackageName:
+    active: false
+
+naming:
+  FunctionNaming:
+    active: false
+  PackageNaming:
+    active: false
