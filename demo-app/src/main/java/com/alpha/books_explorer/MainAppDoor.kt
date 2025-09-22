@@ -64,7 +64,7 @@ class MainAppDoor @Inject constructor() : DoorEntry() {
             MessageType.ReceiveType("ReceivedBookListResponse", this),
         )
 
-    override fun init(context: Context) {
+    override fun init() {
 
     }
 

@@ -1,7 +1,9 @@
 package com.alpha.books_explorer
 
 import android.app.Application
-import com.alpha.modulesDoor.DoorInitializer
+import com.alpha.data.DataDoor
+import com.alpha.modulesDoor.Door
+import com.alpha.modulesDoor.DoorEntry
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -9,10 +11,22 @@ import javax.inject.Inject
 class BooksExplorerApplication : Application() {
 
     @Inject
-    lateinit var doorInitializer: DoorInitializer
+    lateinit var door: Door
+
+    @Inject
+    lateinit var dataDoor: DataDoor
+
+    @Inject
+    lateinit var mainAppDoor: MainAppDoor
+
+    private val doorList: List<DoorEntry>
+        get() = listOf(
+            dataDoor,
+            mainAppDoor
+        )
 
     override fun onCreate() {
         super.onCreate()
-        doorInitializer.setup()
+        door.init(doorList)
     }
 }

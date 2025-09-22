@@ -1,6 +1,5 @@
 package com.alpha.modulesDoor
 
-import android.content.Context
 import com.alpha.modulesDoor.messageSender.MessageSender
 import com.alpha.modulesDoor.messageTypes.EventType
 import com.alpha.modulesDoor.messageTypes.MessageType
@@ -15,7 +14,7 @@ abstract class DoorEntry {
 
     abstract val eventList: List<EventType>
 
-    abstract fun init(context: Context)
+    abstract fun init()
 
     abstract fun onReceive(message: DoorCommand)
 
@@ -26,9 +25,9 @@ abstract class DoorEntry {
     val name: String = javaClass.simpleName
 
     fun init(
-        context: Context,
-        messageSender: MessageSender
+        messageSender: MessageSender,
     ) {
         this.messageSender = messageSender
+        init()
     }
 }

@@ -1,6 +1,5 @@
 package com.alpha.modulesDoor
 
-import android.content.Context
 import com.alpha.modulesDoor.messageSender.MessageSenderImpl
 import com.alpha.modulesDoor.messageTypes.EventType
 import kotlinx.coroutines.CoroutineScope
@@ -15,22 +14,21 @@ internal class DoorKernel(
     private val eventPublishers = mutableMapOf<String, SharedFlow<DoorCommand>>()
 
     fun init(
-        applicationContext: Context,
-        doorInitializer: DoorInitializer,
+        doorList: List<DoorEntry>,
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            messageSender.init(doorInitializer)
+            messageSender.init(doorList)
 
-            doorInitializer.doorList.forEach { door ->
-                door.init(applicationContext, messageSender)
+            doorList.forEach { door ->
+                door.init(messageSender)
             }
 
-            subscribeEventByDoors(doorInitializer)
+            subscribeEventByDoors(doorList)
         }
     }
 
-    fun subscribeEventByDoors(doorInitializer: DoorInitializer) {
-        doorInitializer.doorList.forEach { door ->
+    private fun subscribeEventByDoors(doorList: List<DoorEntry>) {
+        doorList.forEach { door ->
             door.eventList.forEach { event ->
                 when (event) {
                     is EventType.PublishType -> {
@@ -46,7 +44,7 @@ internal class DoorKernel(
             }
         }
 
-        doorInitializer.doorList.forEach { door ->
+        doorList.forEach { door ->
             door.eventList.forEach { event ->
                 when (event) {
                     is EventType.PublishType -> {
@@ -57,7 +55,10 @@ internal class DoorKernel(
                         if (eventPublishers[event.eventName] == null) {
                             throw Exception("${event.eventName} - this event is not registered, please do check your event list once")
                         } else {
-                            event.door.subscribe(eventPublishers[event.eventName]!!, DoorCommand(event.eventName))
+                            event.door.subscribe(
+                                eventPublishers[event.eventName]!!,
+                                DoorCommand(messageName = event.eventName, doorName = event.door.name)
+                            )
                         }
                     }
                 }

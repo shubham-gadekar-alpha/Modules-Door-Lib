@@ -1,6 +1,5 @@
 package com.alpha.modulesDoor.messageSender
 
-import com.alpha.modulesDoor.DoorInitializer
 import com.alpha.modulesDoor.DoorCommand
 import com.alpha.modulesDoor.DoorEntry
 import com.alpha.modulesDoor.messageTypes.MessageType
@@ -11,8 +10,8 @@ internal class MessageSenderImpl : MessageSender {
 
     private val messageSender = mutableMapOf<String, DoorEntry>()
 
-    fun init(doorInitializer: DoorInitializer) {
-        doorInitializer.doorList.forEach { door ->
+    fun init(doorList: List<DoorEntry>) {
+        doorList.forEach { door ->
             door.messageList.forEach { message ->
                 when (message) {
                     is MessageType.ReceiveType -> {
