@@ -16,9 +16,6 @@
 </p>
 <br>
 
-[[](https://jitpack.io/v/shubham-gadekar-alpha/Modules-Door-Lib.svg)](https://jitpack.io/#shubham-gadekar-alpha/Modules-Door-Lib)
-
-
 ## 🔗 Table of Contents
 
 - [📍 Overview](#-overview)
@@ -37,7 +34,7 @@
 
 ---
 
-## 📍 Overview
+## 📍 Overview [![](https://jitpack.io/v/shubham-gadekar-alpha/Modules-Door-Lib.svg)](https://jitpack.io/#shubham-gadekar-alpha/Modules-Door-Lib)
 
 **Modules-Door-Lib** is a lightweight Android library designed for **multi-module projects**, enabling **seamless communication** between modules.
 
