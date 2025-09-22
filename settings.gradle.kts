@@ -11,6 +11,12 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+rootProject.name = "Modules-Door-Lib"
+include(":demo-app")
+include(":modulesDoor")
+include(":data")
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -19,8 +25,3 @@ dependencyResolutionManagement {
         maven { url = uri("https://jitpack.io") }
     }
 }
-
-rootProject.name = "Modules-Door-Lib"
-include(":demo-app")
-include(":modulesDoor")
-include(":data")

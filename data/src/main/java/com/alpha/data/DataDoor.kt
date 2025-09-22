@@ -2,9 +2,9 @@ package com.alpha.data
 
 import android.content.Context
 import com.alpha.data.repository.BookRepository
-import com.alpha.modulesDoor.messageTypes.EventType
 import com.alpha.modulesDoor.DoorCommand
 import com.alpha.modulesDoor.DoorEntry
+import com.alpha.modulesDoor.messageTypes.EventType
 import com.alpha.modulesDoor.messageTypes.MessageType
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -36,14 +36,12 @@ class DataDoor @Inject internal constructor(
     private val favBooks: SharedFlow<DoorCommand> = _favBooks
 
     private val _isBookPresentInFavList = MutableSharedFlow<DoorCommand>()
-    val isBookPresentInFavList: SharedFlow<DoorCommand> = _isBookPresentInFavList
+    private val isBookPresentInFavList: SharedFlow<DoorCommand> = _isBookPresentInFavList
 
     private val _isBookPresentInReadingList = MutableSharedFlow<DoorCommand>()
-    val isBookPresentInReadingList: SharedFlow<DoorCommand> = _isBookPresentInReadingList
+    private val isBookPresentInReadingList: SharedFlow<DoorCommand> = _isBookPresentInReadingList
 
-    override fun init(context: Context) {
-
-    }
+    override fun init() {}
 
     override val eventList: List<EventType>
         get() = listOf(
@@ -87,7 +85,8 @@ class DataDoor @Inject internal constructor(
                 _bookByIdFlow.emit(
                     DoorCommand(
                         messageName = "SubscribeBookById",
-                        payload = jsonObject
+                        payload = jsonObject,
+                        doorName = this@DataDoor.name
                     )
                 )
             }
@@ -95,14 +94,14 @@ class DataDoor @Inject internal constructor(
             CoroutineScope(Dispatchers.IO).launch {
                 val list = bookRepository.getReadingListBooks()
                 if (list.isEmpty()) {
-                    val message = DoorCommand(
-                        messageName = "SubscribeReadingList",
-                        payload = JsonObject().apply {
-                            addProperty("error", "list is empty")
-                        }
-                    )
                     _readingList.emit(
-                        message
+                        DoorCommand(
+                            messageName = "SubscribeReadingList",
+                            payload = JsonObject().apply {
+                                addProperty("error", "list is empty")
+                            },
+                            doorName = this@DataDoor.name
+                        )
                     )
                 } else {
                     val gson = Gson()
@@ -110,12 +109,12 @@ class DataDoor @Inject internal constructor(
                     val jsonObject = JsonObject().apply {
                         add("books", jsonArray)
                     }
-                    val message = DoorCommand(
-                        messageName = "SubscribeReadingList",
-                        payload = jsonObject
-                    )
                     _readingList.emit(
-                        message
+                        DoorCommand(
+                            messageName = "SubscribeReadingList",
+                            payload = jsonObject,
+                            doorName = this@DataDoor.name
+                        )
                     )
                 }
             }
@@ -123,14 +122,14 @@ class DataDoor @Inject internal constructor(
             CoroutineScope(Dispatchers.IO).launch {
                 val list = bookRepository.getFavListBooks()
                 if (list.isEmpty()) {
-                    val message = DoorCommand(
-                        messageName = "SubscribeFavList",
-                        payload = JsonObject().apply {
-                            addProperty("error", "list is empty")
-                        }
-                    )
                     _favBooks.emit(
-                        message
+                        DoorCommand(
+                            messageName = "SubscribeFavList",
+                            payload = JsonObject().apply {
+                                addProperty("error", "list is empty")
+                            },
+                            doorName = this@DataDoor.name
+                        )
                     )
                 } else {
                     val gson = Gson()
@@ -138,12 +137,12 @@ class DataDoor @Inject internal constructor(
                     val jsonObject = JsonObject().apply {
                         add("books", jsonArray)
                     }
-                    val message = DoorCommand(
-                        messageName = "SubscribeFavList",
-                        payload = jsonObject
-                    )
                     _favBooks.emit(
-                        message
+                        DoorCommand(
+                            messageName = "SubscribeFavList",
+                            payload = jsonObject,
+                            doorName = this@DataDoor.name
+                        )
                     )
                 }
             }
@@ -155,14 +154,14 @@ class DataDoor @Inject internal constructor(
                     count = message.payload?.get("count")?.asInt ?: 20,
                 )
                 if (books.isEmpty()) {
-                    val message = DoorCommand(
-                        messageName = "SubscribeSearchResult",
-                        payload = JsonObject().apply {
-                            addProperty("error", "list is empty")
-                        }
-                    )
                     _searchBooks.emit(
-                        message
+                        DoorCommand(
+                            messageName = "SubscribeSearchResult",
+                            payload = JsonObject().apply {
+                                addProperty("error", "list is empty")
+                            },
+                            doorName = this@DataDoor.name
+                        )
                     )
                 } else {
                     val gson = Gson()
@@ -171,12 +170,12 @@ class DataDoor @Inject internal constructor(
                         add("books", jsonArray)
                     }
 
-                    val message = DoorCommand(
-                        messageName = "SubscribeSearchResult",
-                        payload = jsonObject
-                    )
                     _searchBooks.emit(
-                        message
+                        DoorCommand(
+                            messageName = "SubscribeSearchResult",
+                            payload = jsonObject,
+                            doorName = this@DataDoor.name
+                        )
                     )
                 }
             }
@@ -186,14 +185,14 @@ class DataDoor @Inject internal constructor(
                     id = message.payload?.get("id")?.asString ?: ""
                 )
 
-                val message = DoorCommand(
-                    messageName = "SubscribeCheckFavBook",
-                    payload = JsonObject().apply {
-                        addProperty("isFav", isFavBook)
-                    }
-                )
                 _isBookPresentInFavList.emit(
-                    message
+                    DoorCommand(
+                        messageName = "SubscribeCheckFavBook",
+                        payload = JsonObject().apply {
+                            addProperty("isFav", isFavBook)
+                        },
+                        doorName = this@DataDoor.name
+                    )
                 )
             }
         } else if (message.messageName == "GetIfBookIsInReadingList") {
@@ -202,14 +201,14 @@ class DataDoor @Inject internal constructor(
                     id = message.payload?.get("id")?.asString ?: ""
                 )
 
-                val message = DoorCommand(
-                    messageName = "SubscribeCheckReadingListBook",
-                    payload = JsonObject().apply {
-                        addProperty("isInReadingList", isFavBook)
-                    }
-                )
                 _isBookPresentInReadingList.emit(
-                    message
+                    DoorCommand(
+                        messageName = "SubscribeCheckReadingListBook",
+                        payload = JsonObject().apply {
+                            addProperty("isInReadingList", isFavBook)
+                        },
+                        doorName = this@DataDoor.name
+                    )
                 )
             }
         } else if (message.messageName == "AddBookIntoFavList") {
@@ -240,12 +239,12 @@ class DataDoor @Inject internal constructor(
     }
 
     override fun publish(message: DoorCommand): SharedFlow<DoorCommand> {
-        return if (message.messageName == "SubscribeBookById") return bookByIdFlow
-        else if (message.messageName == "SubscribeReadingList") return readingList
-        else if (message.messageName == "SubscribeSearchResult") return searchBooks
-        else if (message.messageName == "SubscribeFavList") return favBooks
-        else if (message.messageName == "SubscribeCheckFavBook") return isBookPresentInFavList
-        else if (message.messageName == "SubscribeCheckReadingListBook") return isBookPresentInReadingList
+        return if (message.messageName == "SubscribeBookById") bookByIdFlow
+        else if (message.messageName == "SubscribeReadingList") readingList
+        else if (message.messageName == "SubscribeSearchResult") searchBooks
+        else if (message.messageName == "SubscribeFavList") favBooks
+        else if (message.messageName == "SubscribeCheckFavBook") isBookPresentInFavList
+        else if (message.messageName == "SubscribeCheckReadingListBook") isBookPresentInReadingList
         else throw Exception("Message Not Subscribed")
     }
 

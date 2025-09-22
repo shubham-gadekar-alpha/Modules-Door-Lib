@@ -37,6 +37,7 @@ android {
 dependencies {
 
     implementation(project(":modulesDoor"))
+//    implementation("com.github.shubham-gadekar-alpha:Modules-Door-Lib:v1.0.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
